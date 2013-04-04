@@ -1,0 +1,10 @@
+<h1>Missing Translations</h1>
+
+<% @locales.each do |locale| %>
+  <h2><%= locale.name %></h2>
+  <ul>
+    <% locale.missing_keys.each do |key| %>
+      <li><%= key %></li>
+    <% end %>
+  </ul>
+<% end %>
