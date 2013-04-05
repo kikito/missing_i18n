@@ -19,8 +19,8 @@ module MissingTranslations
       self.name = name
     end
 
-    def missing_keys
-      self.class.all_keys.reject{ |k| ignores_key?(k) || has_key?(k) }
+    def missing_keys(ignored_prefixes = DEFAULT_IGNORED_PREFIXES)
+      self.class.all_keys.reject{ |k| ignores_key?(k, ignored_prefixes) || has_key?(k) }
     end
 
     def has_key?(key)
