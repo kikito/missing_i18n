@@ -3,3 +3,7 @@
 
 es:
   hello: "Hola"
+
+  shops:
+    index:
+      name: "Nombre"

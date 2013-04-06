@@ -1,7 +1,7 @@
 module MissingTranslations
   class Locale #plain old ruby object
 
-    DEFAULT_IGNORED_PREFIXES = %w{
+    DEFAULT_IGNORED_SCOPES = %w{
       activemodel.errors.messages
       activerecord.errors.messages
       errors.messages
@@ -9,62 +9,89 @@ module MissingTranslations
       number
     }
 
-    @@translations = nil
-    @@keys = nil
+    @@merged_translations = nil
+    @@i18n_translations = nil
     @@all = nil
 
     attr_accessor :name
 
     def initialize(name)
-      self.name = name
+      self.name = name.to_s
     end
 
-    def missing_keys(ignored_prefixes = DEFAULT_IGNORED_PREFIXES)
-      self.class.all_keys.reject{ |k| ignores_key?(k, ignored_prefixes) || has_key?(k) }
+    def to_yaml(ignored_scopes = DEFAULT_IGNORED_SCOPES)
+      {self.name => missing_translations(ignored_scopes)}.to_yaml
     end
 
-    def has_key?(key)
-      # in the future, this might be replaced by I18n.exists? . See https://github.com/svenfuchs/i18n/pull/182
-      I18n.backend.send(:lookup, self.name, key).present?
+    def translations
+      self.class.i18n_translations[self.name]
     end
 
-    def ignores_key?(key, ignored_prefixes = DEFAULT_IGNORED_PREFIXES)
-      ignored_prefixes.any?{ |i_p| key.start_with? i_p }
+    def missing_translations(ignored_scopes = DEFAULT_IGNORED_SCOPES)
+      diff = hash_deep_diff(self.class.merged_translations, self.translations)
+      return hash_filter(diff, [], ignored_scopes)
     end
 
     def self.all
       @@all ||= I18n.available_locales.collect{ |name| new(name) }
     end
 
-    private
-
-    def self.all_translations
-      unless @@translations
-        I18n.backend.send :init_translations
-        @@translations = I18n.backend.send :translations
-      end
-      @@translations
-    end
-
-    def self.all_keys
-      @@keys ||= all_translations.collect do |check_locale, translations|
-        collect_keys([], translations).sort
-      end.flatten.uniq
-    end
-
-    def self.collect_keys(scope, translations)
-      full_keys = []
-      translations.to_a.each do |key, translations|
-        next if translations.nil?
-
-        new_scope = scope.dup << key
-        if translations.is_a?(Hash)
-          full_keys += collect_keys(new_scope, translations)
-        else
-          full_keys << new_scope.join('.')
+    def self.merged_translations
+      unless @@merged_translations
+        @@merged_translations = {}
+        i18n_translations.each do |locale, translations|
+          @@merged_translations = translations.deep_merge(@@merged_translations)
         end
       end
-      full_keys
+      @@merged_translations
+    end
+
+    def self.i18n_translations
+      unless @@i18n_translations
+        I18n.backend.send :init_translations
+        @@i18n_translations = hash_deep_stringify_keys(I18n.backend.send(:translations))
+      end
+      @@i18n_translations
+    end
+
+    private
+
+
+    def hash_filter(hash, scope, ignored_scopes)
+      return hash unless hash.is_a? Hash
+      result = {}
+      hash.each do |key, value|
+        new_scope = scope.dup << key
+        unless new_scope.join('.').in?(ignored_scopes)
+          new_value = hash_filter(value, new_scope, ignored_scopes)
+          result[key] = new_value unless new_value.blank?
+        end
+      end
+      result
+    end
+
+    # assumption big contains small completely
+    def hash_deep_diff(big, small)
+      return big unless small.is_a? Hash
+      result = {}
+      big.each do |key, value|
+        if small[key].present?
+          if value.is_a?(Hash)
+            diff = hash_deep_diff(value, small[key])
+            result[key] = diff unless diff.empty?
+          end
+        else
+          result[key] = value
+        end
+      end
+      result
+    end
+
+    def self.hash_deep_stringify_keys(hash)
+      return hash unless hash.is_a? Hash
+      hash.each_with_object({}) do |(key,value), result|
+        result[key.to_s] = hash_deep_stringify_keys(value)
+      end
     end
 
   end
