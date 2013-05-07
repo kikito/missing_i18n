@@ -1,4 +1,4 @@
-module MissingTranslations
+module MissingI18n
   class Locale #plain old ruby object
 
     DEFAULT_IGNORED_SCOPES = %w{
@@ -20,14 +20,14 @@ module MissingTranslations
     end
 
     def to_yaml(ignored_scopes = DEFAULT_IGNORED_SCOPES)
-      {self.id => missing_translations(ignored_scopes)}.to_yaml
+      {self.id => missing_i18n(ignored_scopes)}.to_yaml
     end
 
     def translations
       self.class.i18n_translations[self.id]
     end
 
-    def missing_translations(ignored_scopes = DEFAULT_IGNORED_SCOPES)
+    def missing_i18n(ignored_scopes = DEFAULT_IGNORED_SCOPES)
       diff = hash_deep_diff(self.class.merged_translations, self.translations)
       return hash_filter(diff, [], ignored_scopes)
     end

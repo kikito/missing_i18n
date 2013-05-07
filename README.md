@@ -1,4 +1,4 @@
-# MissingTranslations
+# MissingI18n
 
 This is a [rails 3 mountable engine](http://railscasts.com/episodes/277-mountable-engines).
 
@@ -8,25 +8,36 @@ It allows you to see which locales have missing entries. You probably want to us
 
 On your Gemfile:
 
-    gem 'missing_translations'
+    gem 'missing_i18n'
 
     # Note: this actually doesn't work yet, I have not published the gem
     # for now you can do this
-    gem 'missing_translations', :git => 'git://github.com/kikito/missing_translations.git'
+    gem 'missing_i18n', :git => 'git://github.com/kikito/missing_i18n.git'
 
 On your `config/routes.rb`:
 
     unless Rails.env.production? # optional, but recommended
-      mount MissingTranslations::Engine, :path => '/missing_translations'
+      mount MissingI18n::Engine, :path => '/missing_i18n'
     end
 
 ## Customization
 
-You can (and are encouraged to) override MissingTranslations' only view by creating a file in
-`app/views/missing_translations/missing_translations/index.html.erb` (notice the double `missing_translations` here.
-One is the engine, the other is the controller).
+You can override MissingI18n' only view by creating any of the following files:
 
-You can similarly override MissingTranslations controller by defining `app/views/missing_translations/missing_translations_controller.rb`.
+* `app/views/missing_i18n/locales/index.html.erb`
+* `app/views/missing_i18n/locales/show.html.erb`
+
+You can similarly override MissingI18n controller by defining `app/views/missing_i18n/locales_controller.rb`.
+
+Finally, you will probably want to add "ignored paths" to `missing_i18n`, for example for avoiding certain groups of prefixes.
+
+To ignore (for example) the entries inserted by the [Faker](http://faker.rubyforge.org/), create an initializer file with this text:
+
+    # config/initializers/missing_i18n.rb
+
+    if defined? MissingI18n
+      MissingI18n.ignored_scopes << 'faker'
+    end
 
 ## Tests
 

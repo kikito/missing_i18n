@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
-  mount MissingTranslations::Engine => "/missing_translations"
-  root :to => redirect("/missing_translations")
+  mount MissingI18n::Engine => "/missing_i18n"
+  root :to => redirect("/missing_i18n")
 end

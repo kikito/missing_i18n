@@ -1,4 +1,4 @@
-module MissingTranslations
+module MissingI18n
   class LocalesController < ApplicationController
     def index
       @locales = Locale.all
