@@ -5,7 +5,7 @@ module MissingTranslations
     end
 
     def show
-      @locale = Locale.new(params[:locale])
+      @locale = Locale.new(params[:id])
       respond_to do |format|
         format.html
         format.yaml {

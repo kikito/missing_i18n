@@ -2,20 +2,10 @@
 //= require_tree .
 
 jQuery(function($) {
-  $('.missing-translations').on('click', 'tr', function() {
-    var $this = $(this);
-    $('iframe').attr('src', $this.find('a').attr('href'));
-    $this.parent().find('.active').removeClass('active');
-    $this.addClass('active');
-  });
-
-  $('.refresh').click(function(e) {
-    e.preventDefault();
-
-    var table = $('.missing-translations');
-    table.find('tbody').empty().append('<tr><td colspan="2">Loading...</td></tr>');
-    table.load(table.data('locale-path') + ' .missing-translation', function() {
-      $('iframe').attr('src', $('.missing-translation tbody a:first-child()').attr('href'));
-    });
+  $('.locales').on('click', 'li', function() {
+    var $li = $(this);
+    $('iframe').attr('src', $li.find('a').attr('href'));
+    $li.parent().find('.active').removeClass('active');
+    $li.addClass('active');
   });
 });

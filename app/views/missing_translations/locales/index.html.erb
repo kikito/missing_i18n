@@ -1,3 +1,19 @@
-<h1>Missing Translations</h1>
+<div class="container">
+  <h1>Missing Translations
+    <%= link_to locales_path, class: 'btn btn-primary refresh' do %>
+      <i class="icon-refresh icon-white"></i>
+      Refresh
+    <% end %>
+  </h1>
 
-<%= render :partial => "locale", :collection => @locales %>
+  <ul class="locales inline">
+    <% @locales.each_with_index do |locale, index| %>
+      <li class="<%= 'active' if index == 0 %>">
+        <%= link_to(locale.id, locale_path(locale.id), target: 'locale') %>
+      </li>
+    <% end %>
+  </ul>
+
+  <iframe name="locale" id="locale" src="<%= @locales[0].present? ? locale_path(@locales[0].id) : 'about:blank' %>"></iframe>
+</div>
+

@@ -13,18 +13,18 @@ module MissingTranslations
     @@i18n_translations = nil
     @@all = nil
 
-    attr_accessor :name
+    attr_accessor :id
 
-    def initialize(name)
-      self.name = name.to_s
+    def initialize(id)
+      self.id = id.to_s
     end
 
     def to_yaml(ignored_scopes = DEFAULT_IGNORED_SCOPES)
-      {self.name => missing_translations(ignored_scopes)}.to_yaml
+      {self.id => missing_translations(ignored_scopes)}.to_yaml
     end
 
     def translations
-      self.class.i18n_translations[self.name]
+      self.class.i18n_translations[self.id]
     end
 
     def missing_translations(ignored_scopes = DEFAULT_IGNORED_SCOPES)
@@ -33,7 +33,7 @@ module MissingTranslations
     end
 
     def self.all
-      @@all ||= I18n.available_locales.collect{ |name| new(name) }
+      @@all ||= I18n.available_locales.collect{ |id| new(id) }
     end
 
     def self.merged_translations

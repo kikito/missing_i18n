@@ -1,4 +1,15 @@
-<h1>Missing Translations for [<%= @locale.name %>]</h1>
+<h2><%= @locale.id %></h2>
 
-<%= render :partial => "locale", :object => @locale %>
+<pre>
+  <%= @locale.to_yaml %>
+</pre>
+
+<p class="pull-right">
+  <%= link_to locale_path(@locale.id, :format => :yaml),
+        :class => 'btn btn-inverse btn-small',
+        :target => '_blank' do %>
+    <i class="icon-download icon-white"></i>
+    yaml
+  <% end %>
+</p>
 
