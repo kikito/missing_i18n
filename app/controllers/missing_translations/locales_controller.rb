@@ -1,5 +1,5 @@
 module MissingTranslations
-  class MissingTranslationsController < ApplicationController
+  class LocalesController < ApplicationController
     def index
       @locales = Locale.all
     end
