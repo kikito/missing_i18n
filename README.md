@@ -30,9 +30,17 @@ You can similarly override MissingTranslations controller by defining `app/views
 
 ## Tests
 
-This engine has no tests, as I'm basically using non-public methods from the i18n gem.
+This engine has no tests. I'm basically using non-public methods from the i18n gem, so it's extremely brittle and coupled with the implementation details of i18n.
 
-Sorry. Feel free to send me pull requests for them if you want!
+However, you can try the dummy app by executing:
+
+    cd test/dummy
+    rails s
+
+If you then go to http://localhost:3000, you should see some differences between the es and en locales. Try modifying the files inside `test/dummy/config/locales` and
+refreshing the page.
+
+Feel free to send me pull requests with tests if you want!
 
 
 
