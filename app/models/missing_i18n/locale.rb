@@ -1,14 +1,6 @@
 module MissingI18n
   class Locale #plain old ruby object
 
-    DEFAULT_IGNORED_SCOPES = %w{
-      activemodel.errors.messages
-      activerecord.errors.messages
-      errors.messages
-      helpers.button
-      number
-    }
-
     @@merged_translations = nil
     @@i18n_translations = nil
     @@all = nil
@@ -19,7 +11,7 @@ module MissingI18n
       self.id = id.to_s
     end
 
-    def to_yaml(ignored_scopes = DEFAULT_IGNORED_SCOPES)
+    def to_yaml(ignored_scopes = MissingI18n.ignored_scopes)
       {self.id => missing_i18n(ignored_scopes)}.to_yaml
     end
 
@@ -27,7 +19,7 @@ module MissingI18n
       self.class.i18n_translations[self.id]
     end
 
-    def missing_i18n(ignored_scopes = DEFAULT_IGNORED_SCOPES)
+    def missing_i18n(ignored_scopes = MissingI18n.ignored_scopes)
       diff = hash_deep_diff(self.class.merged_translations, self.translations)
       return hash_filter(diff, [], ignored_scopes)
     end
