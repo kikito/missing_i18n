@@ -1,4 +1,4 @@
-# MissingI18n
+# missing_i18n
 
 This is a [rails 3 mountable engine](http://railscasts.com/episodes/277-mountable-engines).
 
@@ -10,17 +10,13 @@ On your Gemfile:
 
     gem 'missing_i18n'
 
-    # Note: this actually doesn't work yet, I have not published the gem
-    # for now you can do this
-    gem 'missing_i18n', :git => 'git://github.com/kikito/missing_i18n.git'
-
 On your `config/routes.rb`:
 
     unless Rails.env.production? # optional, but recommended
       mount MissingI18n::Engine, :path => '/missing_i18n'
     end
 
-## Customization
+## Customization & scope filtering
 
 You can override MissingI18n' only view by creating any of the following files:
 
@@ -36,8 +32,22 @@ To ignore (for example) the entries inserted by the [Faker](http://faker.rubyfor
     # config/initializers/missing_i18n.rb
 
     if defined? MissingI18n
-      MissingI18n.ignored_scopes << 'faker'
+      MissingI18n.ignored_scopes += ['faker']
     end
+
+You can add more than one scope on that array. Also, you can add dot-separated scopes (`'foo.bar.baz'`) to filter more precisely.
+
+Notice that `missing_i18n` [ignores some scopes by default](https://github.com/kikito/missing_i18n/blob/master/lib/missing_i18n.rb). These are scopes missing in some
+locales of [rails-i18n](https://github.com/svenfuchs/rails-i18n), and in general it is safe to ignore those. If you need to include them in the list, you can; just
+set `MissingI18n.ignored_scopes` to whatever you want; just use `=` instead of `+=`:
+
+    # config/initializers/missing_i18n.rb
+
+    if defined? MissingI18n
+      MissingI18n.ignored_scopes = ['my.scopes', 'which.dont.include', 'the.default.ones']
+    end
+
+Everything will work as long as `MissingI18n.ignored_scopes` is an array of strings.
 
 ## Tests
 
