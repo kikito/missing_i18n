@@ -1,5 +1,5 @@
-<h2><%=  link_to locale.name, self.send("missing_translations_#{locale.name}_path") %>
-<small>(<%= link_to 'yaml', self.send("missing_translations_#{locale.name}_path", :format => :yaml) %></small>)</h2>
+<h2><%= link_to locale.name, self.send("missing_translations_#{locale.name}_path") %>
+<small>(<%= link_to 'yaml', self.send("missing_translations_#{locale.name}_path", :format => :yaml) %>)</small></h2>
 <pre>
   <%= locale.to_yaml %>
 </pre>
