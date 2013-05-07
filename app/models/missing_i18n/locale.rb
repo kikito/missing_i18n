@@ -25,7 +25,7 @@ module MissingI18n
     end
 
     def self.all
-      @@all ||= I18n.available_locales.collect{ |id| new(id) }
+      @@all ||= I18n.available_locales.collect{ |id| new(id) }.sort_by(&:id)
     end
 
     def self.merged_translations
