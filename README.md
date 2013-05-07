@@ -16,6 +16,9 @@ On your `config/routes.rb`:
       mount MissingI18n::Engine, :path => '/missing_i18n'
     end
 
+After that, you can go to [http://localhost:3000/missing_i18n](http://localhost:3000/missing_i18n) to get a list of all the locales and their
+missing keys.
+
 ## Customization & scope filtering
 
 You can override MissingI18n' only view by creating any of the following files:
@@ -58,7 +61,7 @@ However, you can try the dummy app by executing:
     cd test/dummy
     rails s
 
-If you then go to http://localhost:3000, you should see some differences between the es and en locales. Try modifying the files inside `test/dummy/config/locales` and
+If you then go to [http://localhost:3000](http://localhost:3000), you should see some differences between the es and en locales. Try modifying the files inside `test/dummy/config/locales` and
 refreshing the page.
 
 Feel free to send me pull requests with tests if you want!
